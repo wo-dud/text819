@@ -1,3 +1,166 @@
-<strong>hello</strong> world!!
-<iframe width="914" height="514" src="https://www.youtube.com/embed/pzJjpzayczc?list=RDpzJjpzayczc" title="U" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>오늘의 기분 기반 명언 & 음악 추천</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #fceabb, #f8b500);
+      color: #333;
+    }
 
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    .mood-buttons button {
+      font-size: 2rem;
+      margin: 10px;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .mood-buttons button:hover {
+      transform: scale(1.1);
+    }
+
+    .quote {
+      font-size: 1.2em;
+      margin-top: 30px;
+      font-style: italic;
+    }
+
+    .music {
+      margin-top: 20px;
+    }
+
+    .music a {
+      display: inline-block;
+      background-color: #ff6f61;
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+
+    .music a:hover {
+      background-color: #e85c50;
+    }
+
+    #qrcode {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>오늘 당신의 기분은 어떤가요?</h1>
+
+  <div class="mood-buttons">
+    <button onclick="showMood('happy')">😊</button>
+    <button onclick="showMood('neutral')">😐</button>
+    <button onclick="showMood('sad')">😢</button>
+    <button onclick="showMood('angry')">😠</button>
+  </div>
+
+  <div class="quote" id="quote"></div>
+  <div class="music" id="music"></div>
+  <div id="qrcode"></div>
+
+  <script>
+    const data = {
+      happy: {
+        quotes: [
+          "웃음은 마음의 햇살이다.",
+          "행복은 선택이다.",
+          "미소는 하루를 밝히는 마법이다."
+        ],
+        songs: [
+          "Happy Pharrell Williams",
+          "Can't Stop the Feeling Justin Timberlake",
+          "Walking on Sunshine Katrina and the Waves"
+        ]
+      },
+      neutral: {
+        quotes: [
+          "평범함 속에 특별함이 숨어 있다.",
+          "하루하루가 쌓여 인생이 된다.",
+          "오늘은 그저 그런 날이지만, 나쁘진 않아요."
+        ],
+        songs: [
+          "Weightless Marconi Union",
+          "Better Together Jack Johnson",
+          "Sunday Morning Maroon 5"
+        ]
+      },
+      sad: {
+        quotes: [
+          "이 또한 지나가리라.",
+          "감정은 억제할 필요 없다. 느끼면 된다.",
+          "눈물은 영혼의 소리다."
+        ],
+        songs: [
+          "Let Her Go Passenger",
+          "Someone Like You Adele",
+          "Fix You Coldplay"
+        ]
+      },
+      angry: {
+        quotes: [
+          "화를 내는 건 독을 마시고 남이 죽길 바라는 것과 같다.",
+          "분노는 잠시, 선택은 영원.",
+          "숨을 쉬고 생각하라. 말은 나중에 해도 늦지 않다."
+        ],
+        songs: [
+          "Lose Yourself Eminem",
+          "Stronger Kanye West",
+          "Numb Linkin Park"
+        ]
+      }
+    };
+
+    function showMood(mood) {
+      const quoteEl = document.getElementById('quote');
+      const musicEl = document.getElementById('music');
+      const qrCodeEl = document.getElementById('qrcode');
+
+      const moodData = data[mood];
+
+      // 랜덤 명언 & 노래 선택
+      const randomQuote = moodData.quotes[Math.floor(Math.random() * moodData.quotes.length)];
+      const randomSong = moodData.songs[Math.floor(Math.random() * moodData.songs.length)];
+
+      // 유튜브 검색 URL 생성
+      const encodedTitle = encodeURIComponent(randomSong);
+      const youtubeSearchUrl = `https://www.youtube.com/results?search_query=${encodedTitle}`;
+
+      // 명언 출력
+      quoteEl.textContent = `"${randomQuote}"`;
+
+      // 노래 링크 출력
+      musicEl.innerHTML = `
+        <p>🎵 추천 음악: <strong>${randomSong}</strong></p>
+        <a href="${youtubeSearchUrl}" target="_blank">유튜브에서 검색하기</a>
+      `;
+
+      // QR 코드 초기화 후 새로 생성
+      qrCodeEl.innerHTML = "";
+      new QRCode(qrCodeEl, {
+        text: youtubeSearchUrl,
+        width: 128,
+        height: 128
+      });
+    }
+  </script>
+</body>
+</html>
